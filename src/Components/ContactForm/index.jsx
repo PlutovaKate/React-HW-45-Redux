@@ -1,16 +1,19 @@
 import { useState } from "react";
 import Buttons from "../Button";
-
 import { Stack, TextField } from "@mui/material";
+import { addContact } from "../../store/slices/contactsSlice";
+import { useDispatch } from "react-redux";
 
-function ContactForm({ onSave, onCancel, onReturnToList }) {
+function ContactForm({ onCancel, onReturnToList }) {
+  const dispatch = useDispatch();
+
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
-    onSave({ name, username, phone });
+    dispatch(addContact({ name, username, phone }));
     onReturnToList();
   }
 

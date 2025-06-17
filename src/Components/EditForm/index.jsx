@@ -1,11 +1,18 @@
 import { Stack, TextField } from "@mui/material";
 import Buttons from "../Button";
-import { useParams } from "react-router";
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateContact } from "../../store/slices/contactsSlice";
+import { useNavigate, useParams } from "react-router";
 
-function EditForm({ contacts, onCancel, onSave }) {
+function EditForm() {
   const { id } = useParams();
-  const contact = contacts.find((contact) => String(contact.id) === String(id));
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const contact = useSelector((state) =>
+    state.contacts.find((c) => String(c.id) === String(id))
+  );
 
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -21,8 +28,8 @@ function EditForm({ contacts, onCancel, onSave }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    onSave({ id, name, username, phone });
-    onCancel();
+    dispatch(updateContact({ id, name, username, phone }));
+    navigate("/");
   }
 
   return (
@@ -34,7 +41,7 @@ function EditForm({ contacts, onCancel, onSave }) {
           onChange={(e) => setName(e.target.value)}
         />
         <TextField
-          label="UserName"
+          label="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
@@ -47,7 +54,11 @@ function EditForm({ contacts, onCancel, onSave }) {
           <Buttons type="submit" variant="contained" color="primary">
             Save
           </Buttons>
-          <Buttons variant="outlined" color="secondary" onClick={onCancel}>
+          <Buttons
+            variant="outlined"
+            color="secondary"
+            onClick={() => navigate("/")}
+          >
             Cancel
           </Buttons>
         </Stack>
